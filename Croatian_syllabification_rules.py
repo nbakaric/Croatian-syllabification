@@ -76,16 +76,17 @@ def f_pr02(r):
 				for w in r:
 					if (r.find(j,brk)+1) not in tmp and ((r.find(j,brk)+1)!=0):
 						tmp.append(r.find(j,brk)+1)
-						tpp.append(str(r.find(j,brk)+1)+'-pr02')
+						tpp.append(str(r.find(j,brk)+1)+'-pr02a')
 					brk+=1
+					
 			else:		
 			
 				in_granice=[match.start() for match in re.finditer(re.escape(j),r)]		
 				for y in in_granice:
-					if y+1 not in tmp:
+					if y+1 not in tmp and str(y+2)+'-pr_naj' not in tpp:
 						tmp.append(y+1)
-						tpp.append(str(y+1)+'-pr02')
-	
+						tpp.append(str(y+1)+'-pr02b')
+		
 	
 	tmp.sort()
 	tpp.sort()
@@ -125,7 +126,7 @@ def f_pr03(r):
 					if y+2 not in tmp:
 						tmp.append(y+2)
 						tpp.append(str(y+2)+'-pr3_1')
-			
+					
 			else:
 				in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
 				for y in in_granice:
@@ -136,6 +137,22 @@ def f_pr03(r):
 			
 	tmp.sort()
 	tpp.sort()
+
+#rule 3_4 (v+nz+'sk'+v - rule for possesive adjectives)
+def f_pr3_4(r):
+	slog=regex.findall(v+nz+'sk'+v,r,overlapped=True)
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
+	in_granice=0
+	if len(slog)!=0:
+		for j in slog:
+			in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
+			for y in in_granice:
+				if y+1 not in tmp:
+					tmp.append(y+1)
+					tpp.append(str(y+1)+'-pr3_4')
+	tmp.sort()
+	tpp.sort()	
 
 	
 #rule 04 (v+s+k...+v)
@@ -169,12 +186,45 @@ def f_pr4_1(r):
 					tpp.append(str(y+2)+'-pr4_1')
 	tmp.sort()
 	tpp.sort()
+	
+#rule 4_2 (Nazali+Afrikati, granica je između??)
+def f_pr4_2(r):
+	slog=regex.findall(v+nz+af+v,r,overlapped=True)
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
+	in_granice=0
+	if len(slog)!=0:
+		for j in slog:
+			in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
+			for y in in_granice:
+				if y+2 not in tmp:
+					tmp.append(y+2)
+					tpp.append(str(y+2)+'-pr4_2')
+	tmp.sort()
+	tpp.sort()
+	
+#rule 5_1 (v+s2+s...+v)
+def f_pr5_1(r):
+	slog=regex.findall(v+'['+s2_s+u'n|ń]'+s1+s+'*'+v,r,overlapped=True)
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
+	in_granice=0
+	if len(slog)!=0:
+		for j in slog:
+			in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
+			for y in in_granice:
+				if y+2 not in tmp:
+					tmp.append(y+2)
+					tpp.append(str(y+2)+'-pr5_1')
+	tmp.sort()
+	tpp.sort()
+	
 
-#(vs2|s2v) ###NOVO 
+#rule 5_2(v+s2+s2+v)
 def f_pr5_2(r):
 	slog=regex.findall(v+'['+s2_s+u'|n|ń]'+s2+v,r,overlapped=True)
-	tmp=d_raz[r][0]##
-	tpp=d_raz[r][1]##
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
 	in_granice=0
 	if len(slog)!=0:
 		for j in slog:
@@ -182,17 +232,16 @@ def f_pr5_2(r):
 			for y in in_granice:
 				if y+2 not in tmp and y+1 not in tmp and y-1 not in tmp and y+3<len(r):
 					tmp.append(y+2)
-					tpp.append(str(y+2)+'-pr5_2')##
-	tmp.sort()##
-	tpp.sort()##
-	#f_ispis(r)
+					tpp.append(str(y+2)+'-pr5_2')
+	tmp.sort()
+	tpp.sort()
 	
 	
-# (v|[m|v]s2j*v  ###NOVO
+#rule 5_3 (v+uzv+s)
 def f_pr5_3(r):
 	slog=regex.findall(v+'[m|v]'+s2+'j*',r,overlapped=True)
-	tmp=d_raz[r][0]##
-	tpp=d_raz[r][1]##
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
 	in_granice=0
 	if len(slog)!=0:
 		for j in slog:
@@ -200,38 +249,16 @@ def f_pr5_3(r):
 			for y in in_granice:
 				if y+1 not in tmp:
 					tmp.append(y+1)
-					tpp.append(str(y+1)+'-pr5_3')##
-	tmp.sort()##
-	tpp.sort()##
-	#f_ispis(r)
-	
-	
-# (*v|sjv*) ####NOVO
-def f_pr06(r):
-	slog=regex.findall(v+s+'j'+v,r,overlapped=True)
-	tmp=d_raz[r][0]##
-	tpp=d_raz[r][1]##
-	in_granice=0
-	if len(slog)!=0:
-		for j in slog:
-			in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
-			for y in in_granice:
-				if y+1 not in tmp:
-					tmp.append(y+1)
-					tpp.append(str(y+1)+'-pr06')##
-	tmp.sort()##
-	tpp.sort()##
-	#f_ispis(r)
+					tpp.append(str(y+1)+'-pr5_3')
+	tmp.sort()
+	tpp.sort()
 	
 
-	
-
-	
-# (v|s1s1v) ###NOVO
+#rule 5_4 (v+uzv+s1+v)
 def f_pr5_4(r):
 	slog=regex.findall(v+u'[m|v][n|ń|v]'+v,r,overlapped=True)
-	tmp=d_raz[r][0]##
-	tpp=d_raz[r][1]##
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
 	in_granice=0
 	if len(slog)!=0:
 		for j in slog:
@@ -240,43 +267,38 @@ def f_pr5_4(r):
 				for y in in_granice:
 					if y+2 not in tmp:
 						tmp.append(y+2)
-						tpp.append(str(y+2)+'-pr5_4')##
+						tpp.append(str(y+2)+'-pr5_4')
 			else:
 				in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
 				for y in in_granice:
 					if y+1 not in tmp:
 						tmp.append(y+1)
-						tpp.append(str(y+1)+'-pr5_4')##
-	tmp.sort()##
-	tpp.sort()##
-	#f_ispis(r)
-	
+						tpp.append(str(y+1)+'-pr5_4')
+	tmp.sort()
+	tpp.sort()
 
-# (vs2|s1v) ###NOVO (možda dodati v+s2+s1+(s)*+v
-def f_pr5_1(r):
-	slog=regex.findall(v+'['+s2_s+u'n|ń]'+s1+s+'*'+v,r,overlapped=True)
-	tmp=d_raz[r][0]##
-	tpp=d_raz[r][1]##
+	
+#rule 06 (v+s+'j'+v)
+def f_pr06(r):
+	slog=regex.findall(v+s+'j'+v,r,overlapped=True)
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
 	in_granice=0
 	if len(slog)!=0:
 		for j in slog:
 			in_granice=[match.start() for match in re.finditer(re.escape(j),r)]
 			for y in in_granice:
-				if y+2 not in tmp:
-					tmp.append(y+2)
-					tpp.append(str(y+2)+'-pr5_1')##
-	tmp.sort()##
-	tpp.sort()##
-	#f_ispis(r)
+				if y+1 not in tmp:
+					tmp.append(y+1)
+					tpp.append(str(y+1)+'-pr06')
+	tmp.sort()
+	tpp.sort()	
 	
-
-	
-	
-# (superlativ - naj+vokal) overrajda sva ostala pravila ako je uvjet ispunjen - STARO
+#rule naj (superlative of adjectives beginning with vowels - very specific rule, overrides others)
 def f_pr_naj(r):
 	slog=regex.findall(u'(^naj'+v+').+ij'+v,r,overlapped=True)
-	tmp=d_raz[r][0]##
-	tpp=d_raz[r][1]##
+	tmp=d_raz[r][0]
+	tpp=d_raz[r][1]
 	in_granice=0
 	if len(slog)!=0:
 		for j in slog:
@@ -284,17 +306,15 @@ def f_pr_naj(r):
 			for y in in_granice:
 				if y+3 not in tmp:
 					tmp.append(y+3)
-					tpp.append(str(y+3)+'-pr_naj')##
-	tmp.sort()##
-	tpp.sort()##
-	#f_ispis(r)
-
+					tpp.append(str(y+3)+'-pr_naj')
+	tmp.sort()
+	tpp.sort()
 	
 
-#OSTALE FUNKCIJE
+#end of syllabification rules
 
 
-#učitavanje, sortiranje riječi
+#clean and read input word by word
 def f_ucitaj(rijeci):
 	global raz
 	global d_raz
@@ -315,30 +335,28 @@ def f_ucitaj(rijeci):
 	raz=re.findall(r'['+slova+']+(?:-['+slova+']+)*|[0-9]+(?:[,.][0-9]+)*',rijeci)
 	d_raz={}
 		
-	for i in raz:  ####slogovanje
+	for i in raz:  #run syllabification rules on input
 		d_raz={}
 		d_raz[i]=[[],[]]
+		f_pr_naj(i)
 		f_pr01(i)
 		f_pr02(i)
 		f_pr03(i)
+		f_pr3_4(i)
 		f_pr04(i)
 		f_pr4_1(i)
+		f_pr4_2(i)
 		f_pr5_1(i)
-		f_pr_naj(i)
 		f_pr5_2(i)
 		f_pr5_3(i)
 		f_pr5_4(i)
 		f_pr06(i)
-		#f_pr07(i)
-		#f_pr7_0(i)
-		#f_pr_naj(i)
 		f_ispis(i)
 		
 	
 	f_glasovi(rijeci)
 	f_bigrami(rijeci)
 	f_trigrami(rijeci)
-	#ngram.write('\n##############################\n')
 	
 		
 	
