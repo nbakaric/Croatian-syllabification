@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 #regex module required for overlapped matches
 import codecs, re, regex, operator
 
@@ -458,7 +459,7 @@ frek_meta={}
 
 for rijeci in codecs.open(korpus,'r','utf-8').readlines():
 	
-	rijeci = rijeci.split("\t")[-3].strip()
+	#rijeci = rijeci.split("\t")[-3].strip()
 	f_ucitaj(rijeci)
 	f_stat()
 	f_frek(rezultat,'slog')
